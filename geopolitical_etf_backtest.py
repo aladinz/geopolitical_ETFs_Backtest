@@ -707,16 +707,68 @@ def export_html(prices: pd.DataFrame, results: pd.DataFrame,
   .limit-closing b {{ color: var(--text); }}
 
   /* ── Executive Summary ── */
-  .exec-body {{ max-width: 860px; }}
-  .exec-body p {{ font-size: .875rem; color: var(--muted); line-height: 1.9;
-                  margin-bottom: 18px; }}
-  .exec-body p:last-child {{ margin-bottom: 0; }}
-  .exec-body b {{ color: var(--text); }}
-  .exec-body em {{ color: var(--accent); font-style: normal; font-weight: 600; }}
-  .exec-closing {{ font-size: .85rem; color: var(--muted); line-height: 1.8;
-                   border-top: 1px solid var(--border); padding-top: 16px;
-                   margin-top: 4px; max-width: 860px; }}
-  .exec-closing b {{ color: var(--text); }}
+  .exec-layout {{ display: grid; grid-template-columns: 1fr 300px; gap: 32px;
+                  align-items: start; }}
+  @media(max-width:900px) {{ .exec-layout {{ grid-template-columns: 1fr; }} }}
+  .exec-prose {{ min-width: 0; }}
+  .exec-para {{ margin-bottom: 24px; }}
+  .exec-para:last-of-type {{ margin-bottom: 0; }}
+  .exec-para-label {{ display: inline-flex; align-items: center; gap: 7px;
+                      font-size: .68rem; font-weight: 700; letter-spacing: 1px;
+                      text-transform: uppercase; color: var(--accent);
+                      margin-bottom: 7px; }}
+  .exec-para-label span {{ display: inline-block; width: 18px; height: 18px;
+                          border-radius: 50%; background: #58a6ff1a;
+                          border: 1px solid #58a6ff44;
+                          font-size: .65rem; text-align: center; line-height: 17px; }}
+  .exec-para p {{ font-size: .875rem; color: var(--muted); line-height: 1.9; margin: 0; }}
+  .exec-para p b {{ color: var(--text); }}
+  .exec-etf-pill {{ display: inline-flex; align-items: center; gap: 4px;
+                    padding: 1px 8px 1px 6px; border-radius: 4px;
+                    font-size: .78rem; font-weight: 700; vertical-align: middle;
+                    margin: 0 1px; white-space: nowrap; }}
+  .ep-xle  {{ background:#e07b3918; color:#e07b39; border:1px solid #e07b3940; }}
+  .ep-ita  {{ background:#4a7fc118; color:#4a7fc1; border:1px solid #4a7fc140; }}
+  .ep-ppa  {{ background:#6db3e018; color:#6db3e0; border:1px solid #6db3e040; }}
+  .ep-jets {{ background:#d94f5c18; color:#d94f5c; border:1px solid #d94f5c40; }}
+  .ep-qqq  {{ background:#9b59b618; color:#9b59b6; border:1px solid #9b59b640; }}
+  .ep-spy  {{ background:#27ae6018; color:#27ae60; border:1px solid #27ae6040; }}
+  .exec-takeaway {{ background: #58a6ff0d; border: 1px solid #58a6ff30;
+                    border-left: 3px solid var(--accent);
+                    border-radius: var(--radius); padding: 18px 22px;
+                    margin-top: 24px; }}
+  .exec-takeaway-head {{ font-size: .7rem; font-weight: 700; letter-spacing: 1px;
+                         text-transform: uppercase; color: var(--accent);
+                         margin-bottom: 10px; }}
+  .exec-takeaway-row {{ display: flex; gap: 0; margin-bottom: 6px; }}
+  .exec-takeaway-row:last-child {{ margin-bottom: 0; }}
+  .exec-tak-label {{ font-size: .78rem; font-weight: 600; color: var(--text);
+                     min-width: 170px; flex-shrink: 0; }}
+  .exec-tak-val {{ font-size: .78rem; color: var(--muted); line-height: 1.6; }}
+  .exec-sidebar {{ display: flex; flex-direction: column; gap: 14px; }}
+  .exec-glance {{ background: var(--surface); border: 1px solid var(--border);
+                  border-radius: var(--radius); overflow: hidden; }}
+  .exec-glance-head {{ padding: 10px 16px; border-bottom: 1px solid var(--border);
+                       font-size: .7rem; font-weight: 700; letter-spacing: 1px;
+                       text-transform: uppercase; color: var(--accent); }}
+  .exec-etf-row {{ display: flex; align-items: center; padding: 9px 16px;
+                   border-bottom: 1px solid var(--border); gap: 10px; }}
+  .exec-etf-row:last-child {{ border-bottom: none; }}
+  .exec-etf-dot {{ width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }}
+  .exec-etf-name {{ font-size: .78rem; font-weight: 600; color: var(--text);
+                    flex: 1; min-width: 0; }}
+  .exec-etf-desc {{ font-size: .72rem; color: var(--muted); text-align: right;
+                    white-space: nowrap; }}
+  .exec-etf-dir {{ font-size: .72rem; font-weight: 700; white-space: nowrap;
+                   padding: 1px 6px; border-radius: 3px; }}
+  .exec-dir-up   {{ background:#3fb95018; color:#3fb950; }}
+  .exec-dir-down {{ background:#f8514918; color:#f85149; }}
+  .exec-dir-neu  {{ background:#8b949e18; color:#8b949e; }}
+  .exec-note {{ background: var(--surface); border: 1px solid var(--border);
+                border-left: 3px solid var(--warn);
+                border-radius: var(--radius); padding: 14px 16px;
+                font-size: .75rem; color: var(--muted); line-height: 1.7; }}
+  .exec-note b {{ color: var(--text); }}
 
   /* ── Shock Playbook ── */
   .playbook-intro {{ color: var(--muted); font-size:.85rem; line-height:1.8;
@@ -786,60 +838,150 @@ def export_html(prices: pd.DataFrame, results: pd.DataFrame,
 <!-- ════════════════════════════════════════════ EXECUTIVE SUMMARY ═ -->
 <section>
   <div class="section-title">Executive Summary <span>Key findings &amp; context</span></div>
-  <div class="exec-body">
+  <div class="exec-layout">
 
-    <p>
-      This report examines how six sector ETFs &mdash; <b>XLE</b> (energy), <b>ITA</b> and <b>PPA</b>
-      (defense), <b>JETS</b> (airlines), <b>QQQ</b> (technology), and <b>SPY</b> (broad market) &mdash;
-      have responded to major geopolitical and oil-related shocks between 2001 and 2026. The
-      analysis is grounded in real, tradeable ETF price data. Events were selected because they
-      produced measurable disruptions to oil supply, regional security, or investor risk appetite.
-      The goal is to surface <b>recurring behavioural tendencies</b> that emerge across events,
-      not to construct a predictive model. The dataset covers seven events; the patterns observed
-      are directional guides, not statistically conclusive findings.
-    </p>
+    <!-- ── Left: prose ── -->
+    <div class="exec-prose">
 
-    <p>
-      Across the events studied, a consistent sector hierarchy emerges in the initial shock window.
-      <em>Energy</em> (XLE) tends to rise when oil-supply routes or production infrastructure are
-      perceived to be at risk &mdash; an unsurprising reaction given the direct link between Middle East
-      conflict and crude prices. <em>Defense</em> ETFs (ITA, PPA) show steady gains in the weeks
-      following escalation events, reflecting market expectations of increased procurement and
-      government spending. <em>Airlines</em> (JETS) are the most vulnerable sector, falling sharply
-      during terrorism events and whenever fuel costs spike or travel demand is threatened.
-      <em>Technology</em> (QQQ) tends to dip during the initial shock but recovers quickly in
-      events where recession risk does not materially increase. <b>SPY serves as the baseline</b>
-      throughout: a short pullback is the norm, followed by stabilisation and recovery in most
-      cases.
-    </p>
+      <div class="exec-para">
+        <div class="exec-para-label"><span>01</span> Purpose &amp; Scope</div>
+        <p>This report examines how six sector ETFs &mdash;
+          <span class="exec-etf-pill ep-xle">XLE</span> energy,
+          <span class="exec-etf-pill ep-ita">ITA</span>
+          <span class="exec-etf-pill ep-ppa">PPA</span> defense,
+          <span class="exec-etf-pill ep-jets">JETS</span> airlines,
+          <span class="exec-etf-pill ep-qqq">QQQ</span> technology, and
+          <span class="exec-etf-pill ep-spy">SPY</span> broad market &mdash;
+          have responded to major geopolitical and oil-related shocks between 2001 and 2026.
+          The analysis is grounded in real, tradeable ETF price data. Events were selected
+          because they produced measurable disruptions to oil supply, regional security, or
+          investor risk appetite. The goal is to surface <b>recurring behavioural tendencies</b>
+          across events, not to construct a predictive model. The dataset covers seven events;
+          the patterns observed are directional guides, not statistically conclusive findings.
+        </p>
+      </div>
 
-    <p>
-      The strongest and most consistent reactions occur in the <b>T+1 to T+5 window</b> &mdash; the
-      first week after a shock. Beyond that, mean reversion is the dominant pattern. Most events
-      in this dataset do not create sustained multi-month trends; the market processes the shock,
-      prices in a new baseline, and carries forward. The exceptions are notable: shocks that
-      physically threaten oil supply over a prolonged period, or that escalate into a sustained
-      military campaign, tend to extend the energy and defense outperformance meaningfully into
-      the T+60 window. Events that turn out to be contained &mdash; a single exchange, a brief
-      escalation &mdash; show faster reversion across all sectors.
-    </p>
+      <div class="exec-para">
+        <div class="exec-para-label"><span>02</span> Sector Patterns</div>
+        <p>A consistent sector hierarchy emerges in the initial shock window.
+          <span class="exec-etf-pill ep-xle">XLE</span> tends to rise when oil-supply routes
+          or production infrastructure are perceived to be at risk.
+          <span class="exec-etf-pill ep-ita">ITA</span> and
+          <span class="exec-etf-pill ep-ppa">PPA</span> show steady gains in the weeks
+          following escalation events, reflecting expectations of increased defence procurement.
+          <span class="exec-etf-pill ep-jets">JETS</span> is the most vulnerable sector,
+          falling sharply when fuel costs spike or travel demand is threatened.
+          <span class="exec-etf-pill ep-qqq">QQQ</span> dips at the initial shock but recovers
+          quickly unless recession risk rises materially.
+          <span class="exec-etf-pill ep-spy">SPY</span> is the baseline: a short pullback
+          followed by stabilisation is the norm in most cases.
+        </p>
+      </div>
 
-    <p>
-      For interpreting a new geopolitical shock as it develops, this data supports a simple
-      framing: <b>energy and defense typically carry the bid; airlines and broad risk assets
-      typically carry the fear.</b> The speed of reversion depends on whether the shock
-      remains contained or escalates into something with tangible economic consequences. That
-      distinction &mdash; contained versus structural &mdash; is the most important judgement to make
-      when a new headline arrives, and it is one this model cannot make for you.
-    </p>
+      <div class="exec-para">
+        <div class="exec-para-label"><span>03</span> Duration &amp; Consistency</div>
+        <p>The strongest and most consistent reactions occur in the <b>T+1 to T+5 window</b> &mdash;
+          the first week after a shock. Beyond that, mean reversion is the dominant pattern.
+          Most events do not create sustained multi-month trends; the market processes the shock,
+          prices in a new baseline, and carries forward. The exceptions are notable: shocks that
+          physically threaten oil supply over a prolonged period, or that escalate into a
+          sustained military campaign, tend to extend energy and defence outperformance into the
+          T+60 window. Contained events &mdash; a single exchange, a brief escalation &mdash; show
+          faster reversion across all sectors.
+        </p>
+      </div>
 
-    <p class="exec-closing">
-      <b>What this data shows clearly:</b> sector imbalances are consistent and fast-moving
-      in the first five trading days. <b>What it does not show:</b> how large any specific
-      future shock will be, how long it will last, or whether the next event will resemble
-      any of the seven in this dataset. These patterns are a reference frame. Each new crisis
-      writes its own numbers.
-    </p>
+      <div class="exec-para">
+        <div class="exec-para-label"><span>04</span> Interpreting New Shocks</div>
+        <p>This data supports a simple framing: <b>energy and defence typically carry the bid;
+          airlines and broad risk assets typically carry the fear.</b> The speed of reversion
+          depends on whether the shock remains contained or escalates into something with tangible
+          economic consequences. That distinction &mdash; contained versus structural &mdash; is the
+          most important judgement to make when a new headline arrives, and it is one this model
+          cannot make for you.
+        </p>
+      </div>
+
+      <div class="exec-takeaway">
+        <div class="exec-takeaway-head">Key Takeaway</div>
+        <div class="exec-takeaway-row">
+          <div class="exec-tak-label">What the data shows clearly</div>
+          <div class="exec-tak-val">Sector imbalances are consistent and fast-moving in the first five trading days.</div>
+        </div>
+        <div class="exec-takeaway-row">
+          <div class="exec-tak-label">What it does not show</div>
+          <div class="exec-tak-val">How large any specific future shock will be, how long it will last, or whether the next event will resemble any of the seven in this dataset.</div>
+        </div>
+        <div class="exec-takeaway-row">
+          <div class="exec-tak-label">Bottom line</div>
+          <div class="exec-tak-val">These patterns are a reference frame. Each new crisis writes its own numbers.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Right: at a glance sidebar ── -->
+    <div class="exec-sidebar">
+      <div class="exec-glance">
+        <div class="exec-glance-head">Sector At a Glance &mdash; T+5</div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-dot" style="background:#e07b39;"></div>
+          <div class="exec-etf-name">XLE &mdash; Energy</div>
+          <div class="exec-etf-dir exec-dir-up">Bid &#9650;</div>
+        </div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-dot" style="background:#4a7fc1;"></div>
+          <div class="exec-etf-name">ITA &mdash; Defense</div>
+          <div class="exec-etf-dir exec-dir-up">Bid &#9650;</div>
+        </div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-dot" style="background:#6db3e0;"></div>
+          <div class="exec-etf-name">PPA &mdash; Defense</div>
+          <div class="exec-etf-dir exec-dir-up">Bid &#9650;</div>
+        </div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-dot" style="background:#d94f5c;"></div>
+          <div class="exec-etf-name">JETS &mdash; Airlines</div>
+          <div class="exec-etf-dir exec-dir-down">Fear &#9660;</div>
+        </div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-dot" style="background:#9b59b6;"></div>
+          <div class="exec-etf-name">QQQ &mdash; Technology</div>
+          <div class="exec-etf-dir exec-dir-neu">Dip / Recover</div>
+        </div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-dot" style="background:#27ae60;"></div>
+          <div class="exec-etf-name">SPY &mdash; Broad Market</div>
+          <div class="exec-etf-dir exec-dir-neu">Baseline</div>
+        </div>
+      </div>
+
+      <div class="exec-glance">
+        <div class="exec-glance-head">Dataset Snapshot</div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-name" style="color:var(--muted);">Events analysed</div>
+          <div class="exec-etf-dir" style="background:none;color:var(--text);font-weight:700;">7</div>
+        </div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-name" style="color:var(--muted);">Date range</div>
+          <div class="exec-etf-dir" style="background:none;color:var(--text);font-weight:700;">2001&ndash;2026</div>
+        </div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-name" style="color:var(--muted);">Windows tracked</div>
+          <div class="exec-etf-dir" style="background:none;color:var(--text);font-weight:700;">T+1/5/20/60</div>
+        </div>
+        <div class="exec-etf-row">
+          <div class="exec-etf-name" style="color:var(--muted);">Metrics per row</div>
+          <div class="exec-etf-dir" style="background:none;color:var(--text);font-weight:700;">5</div>
+        </div>
+      </div>
+
+      <div class="exec-note">
+        <b>Tendencies, not forecasts.</b> These patterns are derived from seven historical
+        events. Each new crisis has unique drivers that historical averages cannot fully
+        anticipate. Use this as context, not as a signal.
+      </div>
+    </div>
 
   </div>
 </section>
